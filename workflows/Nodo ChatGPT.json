@@ -1,0 +1,87 @@
+{
+  "updatedAt": "2025-11-03T20:41:09.000Z",
+  "createdAt": "2025-10-30T15:30:43.345Z",
+  "id": "CbjbqZvnJF9QIZXa",
+  "name": "Nodo ChatGPT",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -16
+      ],
+      "id": "8a67f17d-9830-4d10-9178-a06225aa36df",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini-2024-07-18",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI-2024-07-18"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "Cuantas ejecuciones puedes realizar a traves de n8n?"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -16
+      ],
+      "id": "8f9ef4af-e68e-4513-81e5-e90f10f2efb0",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "RaO44VqtH3OlXiJU",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "f7850116-b77c-4c5c-9bc0-98b71c6e65fc",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-10-30T15:30:43.360Z",
+      "createdAt": "2025-10-30T15:30:43.360Z",
+      "role": "workflow:owner",
+      "workflowId": "CbjbqZvnJF9QIZXa",
+      "projectId": "WWYRk7vsqfZbBRrC"
+    }
+  ],
+  "tags": []
+}
