@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2025-11-07T21:33:17.000Z",
+  "updatedAt": "2025-11-07T21:49:19.000Z",
   "createdAt": "2025-11-07T15:41:26.026Z",
   "id": "lVOQDsLOAP58DqPG",
   "name": "Backup  de Workflows",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -129,7 +129,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const inputs = $input.all();\nconst github = inputs.find(i => i.json?.content || i.json?.sha) || {};\nconst local = inputs.find(i => i.json?.workflow) || inputs[0]; // fallback\n\nlet result = 'new';\n\nif (github.content) {\n  try {\n    const decoded = Buffer.from(github.content, 'base64').toString('utf-8');\n    const githubWorkflow = JSON.parse(decoded);\n\n    const sanitize = (wf) => {\n      const copy = { ...wf };\n      delete copy.createdAt;\n      delete copy.updatedAt;\n      delete copy.id;\n      return copy;\n    };\n\n    const isSame = JSON.stringify(sanitize(githubWorkflow)) === JSON.stringify(sanitize(local.workflow));\n    result = isSame ? 'same' : 'different';\n\n  } catch (e) {\n    result = 'different';\n  }\n}\n\n// Devuelve los datos combinados correctamente\nreturn [{\n  json: {\n    result,\n    name: local.name,\n    workflow: local.workflow,\n    repo: local.repo,\n    sha: github.sha || null,\n    path: github.path || null,\n    url: github.url || null\n  }\n}];\n"
+        "jsCode": "// Obtiene los 2 items que entraron (de GitHub y del Loop)\nconst inputs = $input.all();\n\n// 1. Encuentra el item del workflow local (el que viene del loop)\n// Usamos .find() para asegurarnos de que tenemos el correcto, buscando uno que tenga 'nodes'\nconst localItem = inputs.find(i => i.json.nodes) || inputs[0];\n\n// 2. Encuentra el item de GitHub (el que tiene 'content' o 'sha')\n// Si falla ('onError: continue'), puede tener un 'error' o estar vacío.\nconst githubItem = inputs.find(i => i.json.content || i.json.sha || i.json.error) || { json: {} };\n\nconst localWorkflow = localItem.json;\nconst githubData = githubItem.json;\nconst repoData = $('Variables').item.json.repo;\n\nlet result = 'new';\n\n// 3. Verifica si el archivo de GitHub realmente existe y no es un error\nif (githubData.content) {\n  try {\n    // Decodifica el contenido de GitHub (viene en base64)\n    const decoded = Buffer.from(githubData.content, 'base64').toString('utf-8');\n    const githubWorkflow = JSON.parse(decoded);\n\n    // Función para \"limpiar\" los workflows antes de compararlos\n    // Quitamos metadatos que siempre cambian (id, fechas)\n    const sanitize = (wf) => {\n      const copy = { ...wf };\n      delete copy.createdAt;\n      delete copy.updatedAt;\n      delete copy.id;\n      // También podrías querer quitar 'position' de los nodos si cambian\n      return copy;\n    };\n\n    const localSanitized = sanitize(localWorkflow);\n    const githubSanitized = sanitize(githubWorkflow);\n\n    // 4. Compara los JSON \"limpios\"\n    const isSame = JSON.stringify(localSanitized) === JSON.stringify(githubSanitized);\n    result = isSame ? 'same' : 'different';\n\n  } catch (e) {\n    // Si hay un error al parsear el JSON de GitHub, es diferente\n    result = 'different';\n  }\n}\n// Si githubData.content no existe, 'result' se mantiene como 'new'\n\n// 5. Devuelve un solo item con todo lo necesario para los siguientes nodos\nreturn [{\n  json: {\n    result,\n    name: localWorkflow.name,\n    workflow: localWorkflow, // Pasa el workflow local completo\n    repo: repoData, // Pasa la info del repo\n    sha: githubData.sha || null // Pasa el SHA si existe (necesario para 'Edit a file')\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -359,7 +359,7 @@
           "value": "={{ $('Variables').item.json.repo.name }}",
           "mode": "name"
         },
-        "filePath": "={{ $('Variables').item.json.repo.path }}",
+        "filePath": "={{ $('Variables').item.json.repo.path }}{{ $json.name }}.json",
         "asBinaryProperty": false,
         "additionalParameters": {}
       },
@@ -566,13 +566,17 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Every 12 hours": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "ef1f7650-ab7f-4497-aeff-40c7baf3f6a4",
-  "triggerCount": 0,
+  "versionId": "831a1282-f95b-4234-ad31-ad8418b59d68",
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2025-11-07T15:41:26.046Z",
