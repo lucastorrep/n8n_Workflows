@@ -1,28 +1,11 @@
 {
-  "updatedAt": "2025-11-09T16:59:29.000Z",
+  "updatedAt": "2025-11-09T22:49:40.000Z",
   "createdAt": "2025-11-07T22:46:16.941Z",
   "id": "ZhYeE8pauEfOR8Ny",
   "name": "AI-Powered WhatsApp Chatbot for Text, Voice, Images, and PDF with RAG",
   "active": false,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": ""
-        }
-      },
-      "id": "d1b47f60-5a4d-4629-a18d-b3c6ec0c972c",
-      "name": "Knowledge Base Agent",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "position": [
-        3088,
-        1232
-      ],
-      "typeVersion": 1.9
-    },
     {
       "parameters": {
         "model": {
@@ -37,7 +20,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "position": [
         3088,
-        1408
+        1728
       ],
       "typeVersion": 1.2,
       "credentials": {
@@ -49,14 +32,17 @@
     },
     {
       "parameters": {
-        "options": {}
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1024
+        }
       },
       "id": "53c2496a-0737-452c-b49c-ca0afa9c0073",
       "name": "Embeddings OpenAI",
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "position": [
-        3440,
-        1568
+        3296,
+        1616
       ],
       "typeVersion": 1.2,
       "credentials": {
@@ -65,17 +51,6 @@
           "name": "OpenAi account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "id": "54697b14-28a0-4572-b17e-328a7b52cc90",
-      "name": "When clicking \"Execute Workflow\"",
-      "type": "n8n-nodes-base.manualTrigger",
-      "position": [
-        752,
-        272
-      ],
-      "typeVersion": 1
     },
     {
       "parameters": {
@@ -86,171 +61,10 @@
       "name": "Simple Memory",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "position": [
-        3200,
-        1408
+        3184,
+        1728
       ],
       "typeVersion": 1.3
-    },
-    {
-      "parameters": {
-        "mode": "retrieve-as-tool",
-        "toolName": "productDocs",
-        "toolDescription": "retreive documentation",
-        "mongoCollection": {
-          "__rl": true,
-          "mode": "list",
-          "value": "n8n-template",
-          "cachedResultName": "n8n-template"
-        },
-        "vectorIndexName": "data_index",
-        "options": {}
-      },
-      "id": "fda97aec-70be-4611-94a3-7816e384c76b",
-      "name": "MongoDB Vector Search",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas",
-      "position": [
-        3312,
-        1408
-      ],
-      "typeVersion": 1.1
-    },
-    {
-      "parameters": {
-        "jsonMode": "expressionData",
-        "jsonData": "={{ $json.content }}",
-        "options": {
-          "metadata": {
-            "metadataValues": [
-              {
-                "name": "doc_id",
-                "value": "={{ $json.documentId }}"
-              }
-            ]
-          }
-        }
-      },
-      "id": "8cf54cb6-7247-4036-b1e4-9a28650d700a",
-      "name": "Document Section Loader",
-      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
-      "position": [
-        1296,
-        432
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "chunkSize": 3000,
-        "chunkOverlap": 200,
-        "options": {
-          "splitCode": "markdown"
-        }
-      },
-      "id": "4e93e3c3-1847-483a-b6a7-67ff2cff294f",
-      "name": "Document Chunker",
-      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
-      "position": [
-        1296,
-        560
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "mode": "insert",
-        "mongoCollection": {
-          "__rl": true,
-          "mode": "list",
-          "value": "n8n-template",
-          "cachedResultName": "n8n-template"
-        },
-        "vectorIndexName": "data_index",
-        "options": {}
-      },
-      "id": "4f616bfc-4ec7-4c88-8a63-cb2c47655680",
-      "name": "MongoDB Vector Store Inserter",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas",
-      "position": [
-        1200,
-        272
-      ],
-      "typeVersion": 1.1
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "cc9a0766-69a4-4745-97f5-4c4c5e156c91",
-      "name": "OpenAI Embeddings Generator",
-      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
-      "position": [
-        1200,
-        432
-      ],
-      "typeVersion": 1.2,
-      "credentials": {
-        "openAiApi": {
-          "id": "RaO44VqtH3OlXiJU",
-          "name": "OpenAi account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "get",
-        "documentURL": "https://docs.google.com/document/d/1gvgp71e9edob8WLqFIYCdzC7kUq3pLO37VKb-a-vVW4/edit?tab=t.0"
-      },
-      "id": "a9368d23-e35f-4986-8060-30a05f3f9c05",
-      "name": "Google Docs Importer",
-      "type": "n8n-nodes-base.googleDocs",
-      "position": [
-        976,
-        272
-      ],
-      "typeVersion": 2
-    },
-    {
-      "parameters": {
-        "content": "Run this workflow manually to import and index Google Docs product documentation into MongoDB with vector embeddings for fast search.",
-        "color": 5
-      },
-      "id": "1fb0f8a3-9113-4185-a935-0fc327f70881",
-      "name": "Sticky Note",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        368,
-        240
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "content": "This workflow listens for WhatsApp messages (text, audio, image, documents), converts them into embeddings, searches MongoDB, and uses GPT-4o-mini to provide context-aware answers with conversation memory.",
-        "height": 280,
-        "color": 4
-      },
-      "id": "62e13275-6f92-4799-9cbe-e0064ceb5140",
-      "name": "Sticky Note1",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        368,
-        1184
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "content": "Search Index Example \n\n{\n  \"mappings\": {\n    \"dynamic\": false,\n    \"fields\": {\n      \"_id\": {\n        \"type\": \"string\"\n      },\n      \"text\": {\n        \"type\": \"string\"\n      },\n      \"embedding\": {\n        \"type\": \"knnVector\",\n        \"dimensions\": 1536,\n        \"similarity\": \"cosine\"\n      },\n      \"source\": {\n        \"type\": \"string\"\n      },\n      \"doc_id\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}\n",
-        "height": 540
-      },
-      "id": "d21fc408-f66d-4b07-972a-811aa420b4ce",
-      "name": "Sticky Note2",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1600,
-        192
-      ],
-      "typeVersion": 1
     },
     {
       "parameters": {
@@ -267,7 +81,13 @@
         1232
       ],
       "webhookId": "ab09ca3e-53b2-4079-9ddc-bccb2f69551b",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "1nUkTJfx2Fcqq7nD",
+          "name": "WhatsApp OAuth account"
+        }
+      }
     },
     {
       "parameters": {
@@ -482,7 +302,13 @@
         992
       ],
       "webhookId": "bbe62f3d-8788-49d4-aae6-9e9411446d44",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5m5WOo6a3MCrnvy0",
+          "name": "WhatsApp account"
+        }
+      }
     },
     {
       "parameters": {
@@ -498,7 +324,13 @@
         1232
       ],
       "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5m5WOo6a3MCrnvy0",
+          "name": "WhatsApp account"
+        }
+      }
     },
     {
       "parameters": {
@@ -514,14 +346,24 @@
         1568
       ],
       "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5m5WOo6a3MCrnvy0",
+          "name": "WhatsApp account"
+        }
+      }
     },
     {
       "parameters": {
         "url": "={{ $json.url }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "options": {}
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
       },
       "id": "aad1b221-0985-43e7-bc0b-312436171abe",
       "name": "Download Voicemail",
@@ -535,8 +377,6 @@
     {
       "parameters": {
         "url": "={{ $json.url }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
         "options": {}
       },
       "id": "dfd08bec-9d30-4125-b167-7feaeefd7afa",
@@ -551,8 +391,6 @@
     {
       "parameters": {
         "url": "={{ $json.url }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
         "options": {
           "response": {
             "response": {}
@@ -991,13 +829,19 @@
         2208
       ],
       "webhookId": "017d267f-4897-4726-bf03-304ef10352bf",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5m5WOo6a3MCrnvy0",
+          "name": "WhatsApp account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
-        "phoneNumberId": "677680658761861",
-        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "phoneNumberId": "779386255268304",
+        "recipientPhoneNumber": "+34660335347",
         "textBody": "={{ $json.output }}",
         "additionalFields": {}
       },
@@ -1009,7 +853,57 @@
         1232
       ],
       "webhookId": "23834751-5066-48ba-8e19-549680df2b27",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5m5WOo6a3MCrnvy0",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Trabaja con tu Pinecone Vector Store donde tienes toda la información sobre giuntipsy.es y lo que hacen.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "ragprueba",
+          "mode": "list",
+          "cachedResultName": "ragprueba"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        3296,
+        1456
+      ],
+      "id": "e8012b59-f0c9-4b37-9cb3-291b783b5a01",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "W4iLGFAvtN6I7eq7",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "Eres un asistente especializado de Nesplora, empresa dedicada a la evaluación neuropsicológica mediante entornos virtuales. \nTu función es ayudar a profesionales de la psicología, la neuropsicología y la educación a resolver dudas sobre la empresa, sus productos, licencias, formación y soporte técnico, guiando la conversación hacia el uso o adquisición de las soluciones de Nesplora.\n\nPLANES Y PRECIOS NESPLORA:\n\nBits: 25 € por uso (alta inicial de 100 €). \nIncluye los test Attention Kids Aula, Aula School, Adults Aquarium, Executive Functions IceCream y Memory Suite. \nSoporte técnico estándar por correo electrónico.\n\nEssential: 90 € al mes (7 usos/mes) o 270 € trimestrales (22 usos/trimestre). \nIncluye los mismos test, alta gratuita y soporte técnico premium por email y teléfono preferente.\n\nProfessional: 150 € al mes o 1600 € al año, con usos ilimitados. \nIncluye todos los test, alta gratuita y soporte técnico premium por email y teléfono preferente.\n\nBASE DE CONOCIMIENTO (PINECONE VECTOR STORE):\nTienes acceso a una base de conocimiento en Pinecone que contiene información verificada sobre Nesplora: preguntas frecuentes, manuales, descripciones técnicas de los test, políticas de licencia, formación para profesionales, publicaciones científicas, contacto y recursos de soporte.\n\nINSTRUCCIONES DE COMPORTAMIENTO:\n1. Usa SIEMPRE la información recuperada desde Pinecone como fuente principal. \n2. Si la información no está disponible, responde con educación que no dispones de esa información en este momento y ofrece alternativas razonables. \n3. Mantén un tono profesional, claro y cercano, coherente con la comunicación científica y educativa de Nesplora. \n4. Responde siempre en español, con frases completas y fáciles de entender. \n5. Cuando cites productos o servicios, sé preciso pero conciso. \n6. Si la pregunta cubre varios temas, divide la respuesta en párrafos claros. \n7. Si el usuario pregunta algo ajeno a Nesplora, aclara que tu ámbito es la información sobre sus productos, servicios o soporte técnico.\n\nEJEMPLOS DE COMPORTAMIENTO:\n\nUsuario: “¿Dónde están ubicadas sus oficinas?”\nAsistente: “Las oficinas centrales de Nesplora están en San Sebastián, dentro del Parque Tecnológico de Miramón. Desde allí se desarrollan los tests neuropsicológicos y se gestiona el soporte técnico y la formación para profesionales.”\n\nUsuario: “¿Puedo usar los tests con niños con TDAH?”\nAsistente: “Sí. Attention Kids Aula y Aula School están diseñados para la evaluación de la atención en población infantil, incluyendo casos con TDAH. Puedo explicarte las diferencias entre ambos si lo deseas.”\n"
+        }
+      },
+      "id": "d1b47f60-5a4d-4629-a18d-b3c6ec0c972c",
+      "name": "Agente Conversacional",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        3088,
+        1232
+      ],
+      "typeVersion": 1.9
     }
   ],
   "connections": {
@@ -1017,7 +911,7 @@
       "main": [
         [
           {
-            "node": "Knowledge Base Agent",
+            "node": "Agente Conversacional",
             "type": "main",
             "index": 0
           }
@@ -1082,7 +976,7 @@
       "ai_memory": [
         [
           {
-            "node": "Knowledge Base Agent",
+            "node": "Agente Conversacional",
             "type": "ai_memory",
             "index": 0
           }
@@ -1104,19 +998,8 @@
       "main": [
         [
           {
-            "node": "Knowledge Base Agent",
+            "node": "Agente Conversacional",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Document Chunker": {
-      "ai_textSplitter": [
-        [
-          {
-            "node": "Document Section Loader",
-            "type": "ai_textSplitter",
             "index": 0
           }
         ]
@@ -1148,7 +1031,7 @@
       "main": [
         [
           {
-            "node": "Knowledge Base Agent",
+            "node": "Agente Conversacional",
             "type": "main",
             "index": 0
           }
@@ -1181,7 +1064,7 @@
       "ai_embedding": [
         [
           {
-            "node": "MongoDB Vector Search",
+            "node": "Pinecone Vector Store",
             "type": "ai_embedding",
             "index": 0
           }
@@ -1203,7 +1086,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "Knowledge Base Agent",
+            "node": "Agente Conversacional",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -1225,7 +1108,7 @@
       "main": [
         [
           {
-            "node": "Knowledge Base Agent",
+            "node": "Agente Conversacional",
             "type": "main",
             "index": 0
           }
@@ -1237,28 +1120,6 @@
         [
           {
             "node": "Route Document Types",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Docs Importer": {
-      "main": [
-        [
-          {
-            "node": "MongoDB Vector Store Inserter",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Knowledge Base Agent": {
-      "main": [
-        [
-          {
-            "node": "Send Response",
             "type": "main",
             "index": 0
           }
@@ -1346,42 +1207,9 @@
         ]
       ]
     },
-    "MongoDB Vector Search": {
-      "ai_tool": [
-        [
-          {
-            "node": "Knowledge Base Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Document Section Loader": {
-      "ai_document": [
-        [
-          {
-            "node": "MongoDB Vector Store Inserter",
-            "type": "ai_document",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Send Unsupported Response": {
       "main": [
         []
-      ]
-    },
-    "OpenAI Embeddings Generator": {
-      "ai_embedding": [
-        [
-          {
-            "node": "MongoDB Vector Store Inserter",
-            "type": "ai_embedding",
-            "index": 0
-          }
-        ]
       ]
     },
     "Gets WhatsApp Image Source URL": {
@@ -1389,17 +1217,6 @@
         [
           {
             "node": "Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When clicking \"Execute Workflow\"": {
-      "main": [
-        [
-          {
-            "node": "Google Docs Importer",
             "type": "main",
             "index": 0
           }
@@ -1427,15 +1244,43 @@
           }
         ]
       ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Conversacional",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Conversacional": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Response": {
+      "main": [
+        []
+      ]
     }
   },
   "settings": {},
   "staticData": null,
   "meta": {
-    "templateId": "4827"
+    "templateId": "4827",
+    "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "94aec047-1700-4f72-bae3-a62b175482dc",
+  "versionId": "a39fd0a6-db8e-4427-89db-addd7c4a06db",
   "triggerCount": 0,
   "shared": [
     {
