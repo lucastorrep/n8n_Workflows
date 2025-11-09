@@ -568,7 +568,9 @@
   },
   "staticData": {
     "node:Every 12 hours": {
-      "recurrenceRules": []
+      "recurrenceRules": [
+        12
+      ]
     }
   },
   "meta": {
