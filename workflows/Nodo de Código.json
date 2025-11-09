@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-01T19:40:53.000Z",
+  "updatedAt": "2025-11-09T16:58:06.000Z",
   "createdAt": "2025-11-01T13:14:43.070Z",
   "id": "diNTPpTm8dd94lVC",
   "name": "Nodo de Código",
@@ -11,7 +11,7 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -160,
+        -256,
         0
       ],
       "id": "bbafac46-4f89-4b55-9805-c92462765350",
@@ -35,7 +35,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Filtra solo los items cuyo título contiene \"London\"\nreturn items\n  .filter(item => /london/i.test(item.json.title || ''))\n  .map(item => item); // devolvemos solo los que cumplen\n\n"
+        "jsCode": "// Filtra solo los items cuyo título contiene \"London\"\nreturn items\n  .filter(item => /Mark/i.test(item.json.creator || ''))\n  .map(item => item); // devolvemos solo los que cumplen\n\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -95,7 +95,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "1c9f03a0-188b-4798-a623-3d58cb0ef6aa",
+  "versionId": "15e63c62-9a20-43ed-b7c7-ad9ccf82b685",
   "triggerCount": 0,
   "shared": [
     {
