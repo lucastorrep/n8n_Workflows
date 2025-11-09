@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-10-30T15:27:10.000Z",
+  "updatedAt": "2025-11-09T16:59:04.000Z",
   "createdAt": "2025-10-30T14:36:35.306Z",
   "id": "QXeYxGwW9PfGurA9",
   "name": "Bot Telegram Errores",
@@ -43,9 +43,39 @@
       "typeVersion": 1,
       "id": "a0b508fa-2c5a-4e18-a691-948322b79532",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        320,
+        0
+      ],
+      "id": "f835e3ca-c875-49a9-9466-b842ad824130",
+      "name": "AI Agent"
     }
   ],
-  "connections": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
@@ -54,7 +84,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "02ff56b2-be4c-4924-bd35-ba56c8540bd5",
+  "versionId": "62db686f-45d7-4780-88d8-6b1d80599357",
   "triggerCount": 0,
   "shared": [
     {
