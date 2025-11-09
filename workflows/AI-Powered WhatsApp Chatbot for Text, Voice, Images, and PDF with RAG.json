@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-09T22:49:40.000Z",
+  "updatedAt": "2025-11-09T23:19:11.000Z",
   "createdAt": "2025-11-07T22:46:16.941Z",
   "id": "ZhYeE8pauEfOR8Ny",
   "name": "AI-Powered WhatsApp Chatbot for Text, Voice, Images, and PDF with RAG",
@@ -1280,7 +1280,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a39fd0a6-db8e-4427-89db-addd7c4a06db",
+  "versionId": "a173250d-54f4-4619-92aa-0a080971a36d",
   "triggerCount": 0,
   "shared": [
     {
