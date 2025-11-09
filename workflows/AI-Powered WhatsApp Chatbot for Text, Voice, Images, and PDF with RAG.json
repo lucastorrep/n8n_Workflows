@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-07T22:46:16.941Z",
+  "updatedAt": "2025-11-09T16:59:29.000Z",
   "createdAt": "2025-11-07T22:46:16.941Z",
   "id": "ZhYeE8pauEfOR8Ny",
   "name": "AI-Powered WhatsApp Chatbot for Text, Voice, Images, and PDF with RAG",
@@ -7,30 +7,23 @@
   "isArchived": false,
   "nodes": [
     {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": ""
+        }
+      },
       "id": "d1b47f60-5a4d-4629-a18d-b3c6ec0c972c",
       "name": "Knowledge Base Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "position": [
         3088,
-        1220
+        1232
       ],
-      "parameters": {
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": ""
-        },
-        "promptType": "define"
-      },
       "typeVersion": 1.9
     },
     {
-      "id": "c36731ce-5086-4a2f-8c3a-63be150fb8ae",
-      "name": "OpenAI Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "position": [
-        3088,
-        1400
-      ],
       "parameters": {
         "model": {
           "__rl": true,
@@ -39,90 +32,92 @@
         },
         "options": {}
       },
+      "id": "c36731ce-5086-4a2f-8c3a-63be150fb8ae",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        3088,
+        1408
+      ],
+      "typeVersion": 1.2,
       "credentials": {
         "openAiApi": {
           "id": "RaO44VqtH3OlXiJU",
           "name": "OpenAi account"
         }
-      },
-      "typeVersion": 1.2
+      }
     },
     {
+      "parameters": {
+        "options": {}
+      },
       "id": "53c2496a-0737-452c-b49c-ca0afa9c0073",
       "name": "Embeddings OpenAI",
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "position": [
-        3428,
-        1560
+        3440,
+        1568
       ],
-      "parameters": {
-        "options": {}
-      },
+      "typeVersion": 1.2,
       "credentials": {
         "openAiApi": {
           "id": "RaO44VqtH3OlXiJU",
           "name": "OpenAi account"
         }
-      },
-      "typeVersion": 1.2
+      }
     },
     {
+      "parameters": {},
       "id": "54697b14-28a0-4572-b17e-328a7b52cc90",
       "name": "When clicking \"Execute Workflow\"",
       "type": "n8n-nodes-base.manualTrigger",
       "position": [
-        748,
-        260
+        752,
+        272
       ],
-      "parameters": {},
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=memory_{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+      },
       "id": "a79b9b58-0211-4570-af84-64db8bef9de3",
       "name": "Simple Memory",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "position": [
-        3188,
-        1400
+        3200,
+        1408
       ],
-      "parameters": {
-        "sessionKey": "=memory_{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
-        "sessionIdType": "customKey"
-      },
       "typeVersion": 1.3
     },
     {
-      "id": "fda97aec-70be-4611-94a3-7816e384c76b",
-      "name": "MongoDB Vector Search",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas",
-      "position": [
-        3308,
-        1400
-      ],
       "parameters": {
         "mode": "retrieve-as-tool",
-        "options": {},
         "toolName": "productDocs",
+        "toolDescription": "retreive documentation",
         "mongoCollection": {
           "__rl": true,
           "mode": "list",
           "value": "n8n-template",
           "cachedResultName": "n8n-template"
         },
-        "toolDescription": "retreive documentation",
-        "vectorIndexName": "data_index"
+        "vectorIndexName": "data_index",
+        "options": {}
       },
+      "id": "fda97aec-70be-4611-94a3-7816e384c76b",
+      "name": "MongoDB Vector Search",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas",
+      "position": [
+        3312,
+        1408
+      ],
       "typeVersion": 1.1
     },
     {
-      "id": "8cf54cb6-7247-4036-b1e4-9a28650d700a",
-      "name": "Document Section Loader",
-      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
-      "position": [
-        1288,
-        420
-      ],
       "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.content }}",
         "options": {
           "metadata": {
             "metadataValues": [
@@ -132,84 +127,93 @@
               }
             ]
           }
-        },
-        "jsonData": "={{ $json.content }}",
-        "jsonMode": "expressionData"
+        }
       },
+      "id": "8cf54cb6-7247-4036-b1e4-9a28650d700a",
+      "name": "Document Section Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        1296,
+        432
+      ],
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "chunkSize": 3000,
+        "chunkOverlap": 200,
+        "options": {
+          "splitCode": "markdown"
+        }
+      },
       "id": "4e93e3c3-1847-483a-b6a7-67ff2cff294f",
       "name": "Document Chunker",
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "position": [
-        1288,
+        1296,
         560
       ],
-      "parameters": {
-        "options": {
-          "splitCode": "markdown"
-        },
-        "chunkSize": 3000,
-        "chunkOverlap": 200
-      },
       "typeVersion": 1
     },
     {
-      "id": "4f616bfc-4ec7-4c88-8a63-cb2c47655680",
-      "name": "MongoDB Vector Store Inserter",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas",
-      "position": [
-        1188,
-        260
-      ],
       "parameters": {
         "mode": "insert",
-        "options": {},
         "mongoCollection": {
           "__rl": true,
           "mode": "list",
           "value": "n8n-template",
           "cachedResultName": "n8n-template"
         },
-        "vectorIndexName": "data_index"
+        "vectorIndexName": "data_index",
+        "options": {}
       },
+      "id": "4f616bfc-4ec7-4c88-8a63-cb2c47655680",
+      "name": "MongoDB Vector Store Inserter",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas",
+      "position": [
+        1200,
+        272
+      ],
       "typeVersion": 1.1
     },
     {
+      "parameters": {
+        "options": {}
+      },
       "id": "cc9a0766-69a4-4745-97f5-4c4c5e156c91",
       "name": "OpenAI Embeddings Generator",
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "position": [
-        1188,
-        420
+        1200,
+        432
       ],
-      "parameters": {
-        "options": {}
-      },
+      "typeVersion": 1.2,
       "credentials": {
         "openAiApi": {
           "id": "RaO44VqtH3OlXiJU",
           "name": "OpenAi account"
         }
-      },
-      "typeVersion": 1.2
+      }
     },
     {
-      "id": "a9368d23-e35f-4986-8060-30a05f3f9c05",
-      "name": "Google Docs Importer",
-      "type": "n8n-nodes-base.googleDocs",
-      "position": [
-        968,
-        260
-      ],
       "parameters": {
         "operation": "get",
         "documentURL": "https://docs.google.com/document/d/1gvgp71e9edob8WLqFIYCdzC7kUq3pLO37VKb-a-vVW4/edit?tab=t.0"
       },
+      "id": "a9368d23-e35f-4986-8060-30a05f3f9c05",
+      "name": "Google Docs Importer",
+      "type": "n8n-nodes-base.googleDocs",
+      "position": [
+        976,
+        272
+      ],
       "typeVersion": 2
     },
     {
+      "parameters": {
+        "content": "Run this workflow manually to import and index Google Docs product documentation into MongoDB with vector embeddings for fast search.",
+        "color": 5
+      },
       "id": "1fb0f8a3-9113-4185-a935-0fc327f70881",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
@@ -217,162 +221,150 @@
         368,
         240
       ],
-      "parameters": {
-        "color": 5,
-        "content": "Run this workflow manually to import and index Google Docs product documentation into MongoDB with vector embeddings for fast search."
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "content": "This workflow listens for WhatsApp messages (text, audio, image, documents), converts them into embeddings, searches MongoDB, and uses GPT-4o-mini to provide context-aware answers with conversation memory.",
+        "height": 280,
+        "color": 4
+      },
       "id": "62e13275-6f92-4799-9cbe-e0064ceb5140",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         368,
-        1180
+        1184
       ],
-      "parameters": {
-        "color": 4,
-        "height": 280,
-        "content": "This workflow listens for WhatsApp messages (text, audio, image, documents), converts them into embeddings, searches MongoDB, and uses GPT-4o-mini to provide context-aware answers with conversation memory."
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "content": "Search Index Example \n\n{\n  \"mappings\": {\n    \"dynamic\": false,\n    \"fields\": {\n      \"_id\": {\n        \"type\": \"string\"\n      },\n      \"text\": {\n        \"type\": \"string\"\n      },\n      \"embedding\": {\n        \"type\": \"knnVector\",\n        \"dimensions\": 1536,\n        \"similarity\": \"cosine\"\n      },\n      \"source\": {\n        \"type\": \"string\"\n      },\n      \"doc_id\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}\n",
+        "height": 540
+      },
       "id": "d21fc408-f66d-4b07-972a-811aa420b4ce",
       "name": "Sticky Note2",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1588,
-        240
+        1600,
+        192
       ],
-      "parameters": {
-        "height": 540,
-        "content": "Search Index Example \n\n{\n  \"mappings\": {\n    \"dynamic\": false,\n    \"fields\": {\n      \"_id\": {\n        \"type\": \"string\"\n      },\n      \"text\": {\n        \"type\": \"string\"\n      },\n      \"embedding\": {\n        \"type\": \"knnVector\",\n        \"dimensions\": 1536,\n        \"similarity\": \"cosine\"\n      },\n      \"source\": {\n        \"type\": \"string\"\n      },\n      \"doc_id\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}\n"
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
       "id": "ddc0fdb7-bacc-4f41-87bf-48bb714a404d",
       "name": "WhatsApp Trigger",
       "type": "n8n-nodes-base.whatsAppTrigger",
       "position": [
-        748,
-        1220
+        752,
+        1232
       ],
       "webhookId": "ab09ca3e-53b2-4079-9ddc-bccb2f69551b",
-      "parameters": {
-        "options": {},
-        "updates": [
-          "messages"
-        ]
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "resource": "audio",
+        "operation": "translate",
+        "options": {}
+      },
       "id": "8842d0c7-082e-4b4e-b350-a8bb8f47c390",
       "name": "OpenAI",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "position": [
-        1828,
-        980
+        1840,
+        992
       ],
-      "parameters": {
-        "options": {},
-        "resource": "audio",
-        "operation": "translate"
-      },
+      "typeVersion": 1.8,
       "credentials": {
         "openAiApi": {
           "id": "RaO44VqtH3OlXiJU",
           "name": "OpenAi account"
         }
-      },
-      "typeVersion": 1.8
+      }
     },
     {
-      "id": "a342dc14-0ffe-41ba-a3e9-853fe043f4fb",
-      "name": "OpenAI1",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "position": [
-        1828,
-        1220
-      ],
       "parameters": {
+        "resource": "image",
+        "operation": "analyze",
         "modelId": {
           "__rl": true,
           "mode": "list",
           "value": "gpt-4o-mini",
           "cachedResultName": "GPT-4O-MINI"
         },
+        "inputType": "base64",
         "options": {
           "detail": "auto"
-        },
-        "resource": "image",
-        "inputType": "base64",
-        "operation": "analyze"
+        }
       },
+      "id": "a342dc14-0ffe-41ba-a3e9-853fe043f4fb",
+      "name": "OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        1840,
+        1232
+      ],
+      "typeVersion": 1.8,
       "credentials": {
         "openAiApi": {
           "id": "RaO44VqtH3OlXiJU",
           "name": "OpenAi account"
         }
-      },
-      "typeVersion": 1.8
+      }
     },
     {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
       "id": "b1220587-fadf-4b5b-944e-b6e60b64c141",
       "name": "Extract from PDF",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        2428,
+        2432,
         1680
       ],
-      "parameters": {
-        "options": {},
-        "operation": "pdf"
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "operation": "xls",
+        "options": {}
+      },
       "id": "b02474a0-be6a-4591-a10c-abc2f597a3e6",
       "name": "Extract from XLS",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        2328,
-        1880
+        2336,
+        1888
       ],
-      "parameters": {
-        "options": {},
-        "operation": "xls"
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "operation": "xlsx",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
       "id": "1012f8a7-9fcb-4d80-ad5f-bfaa31eddf7d",
       "name": "Extract from XLSX",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        2328,
-        2040
+        2336,
+        2048
       ],
-      "parameters": {
-        "options": {},
-        "operation": "xlsx",
-        "binaryPropertyName": "=data"
-      },
       "typeVersion": 1
     },
     {
-      "id": "8891a2eb-16d6-471a-803e-df1789a336f3",
-      "name": "Map JSON",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2568,
-        1800
-      ],
       "parameters": {
-        "options": {},
         "assignments": {
           "assignments": [
             {
@@ -382,33 +374,33 @@
               "value": "={{ $json }}"
             }
           ]
-        }
+        },
+        "options": {}
       },
+      "id": "8891a2eb-16d6-471a-803e-df1789a336f3",
+      "name": "Map JSON",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2576,
+        1808
+      ],
       "typeVersion": 3.4
     },
     {
+      "parameters": {
+        "jsCode": "let requests = $(\"Download Document\").all()\n\nrequests.forEach((request) => {\n  let mime_type = request.json.mime_type\n\n  if (\n    mime_type === \"text/calendar\" || \n    mime_type === \"application/ics\" || \n    mime_type === \"text/x-calendar\"\n  ) {\n    request.json.mime_type = \"mapped/calendar\"\n  }\n\n  if (\n    mime_type === \"application/xml\" || \n    mime_type === \"text/xml\") {\n    request.json.mime_type = \"mapped/xml\"\n  }\n\n  if (!mime_type) {\n    request.json.mime_type = $('Gets WhatsApp Document Source URL').first().json.mime_type\n  }\n})\n\nreturn requests;"
+      },
       "id": "a0920bc7-71bd-4803-bbce-4cef14cac5ee",
       "name": "Map file extensions",
       "type": "n8n-nodes-base.code",
       "position": [
-        1788,
-        1560
+        1792,
+        1568
       ],
-      "parameters": {
-        "jsCode": "let requests = $(\"Download Document\").all()\n\nrequests.forEach((request) => {\n  let mime_type = request.json.mime_type\n\n  if (\n    mime_type === \"text/calendar\" || \n    mime_type === \"application/ics\" || \n    mime_type === \"text/x-calendar\"\n  ) {\n    request.json.mime_type = \"mapped/calendar\"\n  }\n\n  if (\n    mime_type === \"application/xml\" || \n    mime_type === \"text/xml\") {\n    request.json.mime_type = \"mapped/xml\"\n  }\n\n  if (!mime_type) {\n    request.json.mime_type = $('Gets WhatsApp Document Source URL').first().json.mime_type\n  }\n})\n\nreturn requests;"
-      },
       "typeVersion": 2
     },
     {
-      "id": "77302aa3-6e87-4de6-9ec7-387ddb76fc84",
-      "name": "Map document prompt",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2808,
-        1620
-      ],
       "parameters": {
-        "options": {},
         "assignments": {
           "assignments": [
             {
@@ -418,20 +410,20 @@
               "value": "=Parsed text: {{ $json.text || $json.data || $json }}\n\nCaption text: {{ $('Route Types').item.json.messages[0].document.caption }}\n\nMimeType: {{ $('Gets WhatsApp Document Source URL').item.json.mime_type }}"
             }
           ]
-        }
+        },
+        "options": {}
       },
+      "id": "77302aa3-6e87-4de6-9ec7-387ddb76fc84",
+      "name": "Map document prompt",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2816,
+        1632
+      ],
       "typeVersion": 3.4
     },
     {
-      "id": "90821e49-c98d-4617-8289-1be6d3aeb087",
-      "name": "Map image prompt",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2048,
-        1220
-      ],
       "parameters": {
-        "options": {},
         "assignments": {
           "assignments": [
             {
@@ -441,20 +433,20 @@
               "value": "=User image description: {{ $json.content }}\n\nUser image caption: {{ $('Route Types').item.json.messages[0].image.caption }}"
             }
           ]
-        }
+        },
+        "options": {}
       },
+      "id": "90821e49-c98d-4617-8289-1be6d3aeb087",
+      "name": "Map image prompt",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2048,
+        1232
+      ],
       "typeVersion": 3.4
     },
     {
-      "id": "cf603f5c-0a6e-4cdd-846b-738ed417daa2",
-      "name": "Map text prompt",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        1388,
-        780
-      ],
       "parameters": {
-        "options": {},
         "assignments": {
           "assignments": [
             {
@@ -464,123 +456,123 @@
               "value": "={{ $json.messages[0].text.body }}"
             }
           ]
-        }
+        },
+        "options": {}
       },
+      "id": "cf603f5c-0a6e-4cdd-846b-738ed417daa2",
+      "name": "Map text prompt",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1392,
+        784
+      ],
       "typeVersion": 3.4
     },
     {
-      "id": "7727e89d-cf21-4440-ab7f-85594eb1ec44",
-      "name": "Gets WhatsApp Voicemail Source URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        1388,
-        980
-      ],
-      "webhookId": "bbe62f3d-8788-49d4-aae6-9e9411446d44",
       "parameters": {
         "resource": "media",
         "operation": "mediaUrlGet",
         "mediaGetId": "={{ $json.messages[0].audio.id}}"
       },
+      "id": "7727e89d-cf21-4440-ab7f-85594eb1ec44",
+      "name": "Gets WhatsApp Voicemail Source URL",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        1392,
+        992
+      ],
+      "webhookId": "bbe62f3d-8788-49d4-aae6-9e9411446d44",
       "typeVersion": 1
     },
     {
-      "id": "08b938a1-d32e-4aa1-958f-bdabd3dfec13",
-      "name": "Gets WhatsApp Image Source URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        1388,
-        1220
-      ],
-      "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
       "parameters": {
         "resource": "media",
         "operation": "mediaUrlGet",
         "mediaGetId": "={{ $json.messages[0].image.id }}"
       },
+      "id": "08b938a1-d32e-4aa1-958f-bdabd3dfec13",
+      "name": "Gets WhatsApp Image Source URL",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        1392,
+        1232
+      ],
+      "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
       "typeVersion": 1
     },
     {
-      "id": "d934ce80-cdb0-476d-8896-b8c226086933",
-      "name": "Gets WhatsApp Document Source URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        1388,
-        1560
-      ],
-      "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
       "parameters": {
         "resource": "media",
         "operation": "mediaUrlGet",
         "mediaGetId": "={{ $json.messages[0].document.id }}"
       },
+      "id": "d934ce80-cdb0-476d-8896-b8c226086933",
+      "name": "Gets WhatsApp Document Source URL",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        1392,
+        1568
+      ],
+      "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
       "id": "aad1b221-0985-43e7-bc0b-312436171abe",
       "name": "Download Voicemail",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        1608,
-        980
+        1616,
+        992
       ],
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "options": {},
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
       "typeVersion": 4.2
     },
     {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
       "id": "dfd08bec-9d30-4125-b167-7feaeefd7afa",
       "name": "Download Image",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        1608,
-        1220
+        1616,
+        1232
       ],
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "options": {},
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
       "typeVersion": 4.2
     },
     {
-      "id": "ba3d221f-ce5c-4105-82cf-fbd11c2c0e2f",
-      "name": "Download Document",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        1608,
-        1560
-      ],
       "parameters": {
         "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "options": {
           "response": {
             "response": {}
           }
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
+        }
       },
+      "id": "ba3d221f-ce5c-4105-82cf-fbd11c2c0e2f",
+      "name": "Download Document",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1616,
+        1568
+      ],
       "typeVersion": 4.2
     },
     {
-      "id": "87ecc44f-cc1f-47e0-b995-079230be118d",
-      "name": "Route Types",
-      "type": "n8n-nodes-base.switch",
-      "position": [
-        968,
-        1200
-      ],
       "parameters": {
         "rules": {
           "values": [
             {
-              "outputKey": "Text",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -601,10 +593,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "Text"
             },
             {
-              "outputKey": "Audio",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -626,10 +618,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "Audio"
             },
             {
-              "outputKey": "Image",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -651,10 +643,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "Image"
             },
             {
-              "outputKey": "Document",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -676,27 +668,27 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "Document"
             }
           ]
         },
         "options": {}
       },
+      "id": "87ecc44f-cc1f-47e0-b995-079230be118d",
+      "name": "Route Types",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        976,
+        1200
+      ],
       "typeVersion": 3.2
     },
     {
-      "id": "ce3d08ce-4445-4473-90b2-227ba065c4d8",
-      "name": "Route Document Types",
-      "type": "n8n-nodes-base.switch",
-      "position": [
-        2048,
-        1400
-      ],
       "parameters": {
         "rules": {
           "values": [
             {
-              "outputKey": "CSV",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -718,10 +710,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "CSV"
             },
             {
-              "outputKey": "HTML",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -742,10 +734,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "HTML"
             },
             {
-              "outputKey": "Calendar",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -767,10 +759,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "Calendar"
             },
             {
-              "outputKey": "RTF",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -792,10 +784,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "RTF"
             },
             {
-              "outputKey": "TXT",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -817,10 +809,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "TXT"
             },
             {
-              "outputKey": "XML",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -842,10 +834,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "XML"
             },
             {
-              "outputKey": "PDF",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -867,10 +859,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "PDF"
             },
             {
-              "outputKey": "JSON",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -892,10 +884,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "JSON"
             },
             {
-              "outputKey": "XLS",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -917,10 +909,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "XLS"
             },
             {
-              "outputKey": "XLSX",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -942,10 +934,10 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "XLSX"
             },
             {
-              "outputKey": "ELSE",
               "conditions": {
                 "options": {
                   "version": 2,
@@ -967,48 +959,56 @@
                   }
                 ]
               },
-              "renameOutput": true
+              "renameOutput": true,
+              "outputKey": "ELSE"
             }
           ]
         },
         "options": {}
       },
+      "id": "ce3d08ce-4445-4473-90b2-227ba065c4d8",
+      "name": "Route Document Types",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        2048,
+        1408
+      ],
       "typeVersion": 3.2
     },
     {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "677680658761861",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "textBody": "=The File type you provided is unsupported.",
+        "additionalFields": {}
+      },
       "id": "18684032-23ec-4e10-88f4-e93363432a67",
       "name": "Send Unsupported Response",
       "type": "n8n-nodes-base.whatsApp",
       "position": [
-        2328,
-        2200
+        2336,
+        2208
       ],
       "webhookId": "017d267f-4897-4726-bf03-304ef10352bf",
-      "parameters": {
-        "textBody": "=The File type you provided is unsupported.",
-        "operation": "send",
-        "phoneNumberId": "677680658761861",
-        "additionalFields": {},
-        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}"
-      },
       "typeVersion": 1
     },
     {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "677680658761861",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
       "id": "acc8e4ae-0610-42fc-a318-b9a23a38919b",
       "name": "Send Response",
       "type": "n8n-nodes-base.whatsApp",
       "position": [
-        3448,
-        1220
+        3456,
+        1232
       ],
       "webhookId": "23834751-5066-48ba-8e19-549680df2b27",
-      "parameters": {
-        "textBody": "={{ $json.output }}",
-        "operation": "send",
-        "phoneNumberId": "677680658761861",
-        "additionalFields": {},
-        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}"
-      },
       "typeVersion": 1
     }
   ],
@@ -1429,13 +1429,13 @@
       ]
     }
   },
-  "settings": null,
+  "settings": {},
   "staticData": null,
   "meta": {
     "templateId": "4827"
   },
-  "pinData": null,
-  "versionId": "6c704d91-c3f6-4e84-8469-dd0d0495827e",
+  "pinData": {},
+  "versionId": "94aec047-1700-4f72-bae3-a62b175482dc",
   "triggerCount": 0,
   "shared": [
     {
