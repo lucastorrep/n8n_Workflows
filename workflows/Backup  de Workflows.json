@@ -569,7 +569,7 @@
   "staticData": {
     "node:Every 12 hours": {
       "recurrenceRules": [
-        0
+        12
       ]
     }
   },
